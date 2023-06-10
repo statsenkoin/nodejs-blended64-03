@@ -5,6 +5,8 @@ const connectDb = require("../config/connectDb");
 require("colors");
 const errorHandler = require("./middlewares/errorHandler");
 
+const authMiddleware = require("./middlewares/authMiddleware");
+
 const bcrypt = require("bcryptjs");
 
 const jwt = require("jsonwebtoken");
@@ -103,16 +105,34 @@ app.post(
       frinds: ["Vitalik", "Ihor", "Oleh"],
       id: user._id,
     });
-    console.log(token);
+    user.token = token;
+    const userWithToken = await user.save();
+
     // const user = await UserModel.create({
     //   ...req.body,
     //   password: hashPassword,
     // });
-    // res.status(201).json({
-    //   code: 201,
-    //   message: "Success",
-    //   data: { ...req.body },
-    // });
+    res.status(200).json({
+      code: 200,
+      message: "Success",
+      data: { email: userWithToken.email, token },
+    });
+  })
+);
+
+app.get(
+  "/logout",
+  authMiddleware,
+  asyncHandler(async (req, res) => {
+    const id = req.user;
+
+    const user = await UserModel.findByIdAndUpdate(id, { token: null });
+
+    res.status(200).json({
+      code: 200,
+      message: "Success",
+      data: { email: user.email, message: "Logout success" },
+    });
   })
 );
 
