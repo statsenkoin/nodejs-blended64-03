@@ -6,23 +6,21 @@
 // 4. Update post
 // 5. Delete post
 
-const express = require('express');
+const express = require("express");
 const postsRoutes = express.Router();
-const postsController = require('../controllers/PostsController');
+const postsController = require("../controllers/PostsController");
 
-postsRoutes.get('/posts', postsController.getAll);
+postsRoutes.get("/posts", postsController.getAll);
 postsRoutes.post(
-  '/posts',
+  "/posts",
   (req, res, next) => {
-    console.log('JOI');
+    console.log("JOI");
     next();
   },
   postsController.add
 );
-postsRoutes.get('/posts/:id', postsController.getOne);
-postsRoutes.patch('/posts/:id', postsController.update);
-postsRoutes.delete('/posts/:id', postsController.remove);
-
-console.log('start  ');
+postsRoutes.get("/posts/:id", postsController.getOne);
+postsRoutes.patch("/posts/:id", postsController.update);
+postsRoutes.delete("/posts/:id", postsController.remove);
 
 module.exports = postsRoutes;
